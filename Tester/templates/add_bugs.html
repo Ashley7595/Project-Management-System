@@ -1,0 +1,98 @@
+{% extends 'sidebar4.html'%}
+{%block content%}
+{% load crispy_forms_tags %}
+{% load static %}
+
+<div class="container">
+            <div class="row">
+
+                <div class="col-lg-2">
+                </div>
+
+                <div class="col-lg-8 common_form">
+                    <div class="row">
+
+                        <div class="title mt-4 mb-3">
+                            <h4>Add Bugs</h4>
+                        </div>
+                        
+                        <form method="post" autocomplete="off" id="bugForm">
+                            {% csrf_token %}
+                        
+                            <div class="row">
+                                {% for field in form %}
+                                    {% if forloop.first or forloop.counter0|divisibleby:2 %}
+                                        <div class="row">  
+                                    {% endif %}
+                        
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            {{ field|as_crispy_field }}
+                                            <small id="{{ field.auto_id }}_error" class="text-danger"></small>
+                                        </div>
+                                    </div>
+                        
+                                    {% if forloop.counter|divisibleby:2 or forloop.last %}
+                                        </div> 
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        
+                            <div class="col-lg-12 text-center mt-5 mb-5">
+                                <button type="submit" class="btn-common">ADD</button>
+                            </div>
+                        </form>
+                        
+                        
+                        
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </body>
+    </html>
+    {%endblock%}
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("employeeForm").addEventListener("submit", function(event) {
+                let isValid = true;
+        
+                let inputs = document.querySelectorAll("#employeeForm input, #employeeForm select, #employeeForm textarea");
+        
+                inputs.forEach(function(input) {
+                    let errorElement = document.getElementById(input.id + "_error");
+                    
+                    if (errorElement) {
+                        errorElement.innerText = "";  
+                    }
+        
+                    if (input.hasAttribute("required") && input.value.trim() === "") {
+                        errorElement.innerText = input.placeholder || input.name.replace("_", " ") + " is required.";
+                        isValid = false;
+                    }
+        
+                    if (input.type === "email" && input.value.trim() !== "") {
+                        if (!input.value.endsWith("@gmail.com")) {
+                            errorElement.innerText = "Only Gmail addresses are allowed.";
+                            isValid = false;
+                        }
+                    }
+
+                    if (input.name === "employee_phone" && input.value.trim() !== "") {
+                        let phoneRegex = /^\+\d{12,14}$/;
+                        if (!phoneRegex.test(input.value)) {
+                            errorElement.innerText = "Phone number must be in format +[Country Code][10-digit number] (e.g., +911234567890)";
+                            isValid = false;
+                        }
+                    }
+                });
+        
+                if (!isValid) {
+                    event.preventDefault(); 
+                }
+            });
+        });
+        </script>
+        

@@ -1,0 +1,119 @@
+{% extends 'sidebar2.html'%}
+{%block content%}
+{% load static %}
+
+
+<div class="container-fluid mb-5">
+    <div class="mb-3">
+        <h3 class="fw-bold fs-4 mb-3">
+            Welcome, {{ request.user.first_name }} {{ request.user.last_name }}!
+        </h3>
+        <div class="row">
+
+            {% for card in card_data %}
+                <div class="col-12 col-md-4"> 
+                <div class="card card-boxes shadow">
+                <div class="card-body py-4">
+                <h5 class="mb-2 fw-bold text-center">{{ card.title }}</h5>
+                <p class="fw-bold mb-2 text-center">{{ card.value }}</p>
+                </div>
+                </div>
+                </div>
+            {% endfor %}
+
+        </div>
+
+        <div class="row">
+            <div class="col-12 col-md-8 col-sm-8 mt-2">
+                <h3 class="fw-bold fs-4 my-3">Tasks</h3>
+                <table class="table table-striped text-center">
+                    <thead>
+                        <tr class="highlight">
+                            <th scope="col">Task Title</th>
+                            <th scope="col">Assigned To</th>
+                            <th scope="col">Roles</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Priority</th>
+                            <th scope="col">Due Date</th>
+                        </tr>
+                    </thead>
+                
+                    <tbody>
+                        {% for task in Tasks %}
+                        <tr>
+                            <td>{{ task.task_title }}</td>
+                            <td class="text-truncate" style="max-width: 150px;">{{ task.task_assigned_to }}</td>
+                            <td>
+                                {% for role in task.task_roles.all %}
+                                    {{ role.all_roles }}{% if not forloop.last %}, {% endif %}
+                                {% empty %}
+                                    No roles assigned
+                                {% endfor %}
+                            </td>
+                            <td>{{ task.task_status }}</td>
+                            <td>{{ task.task_priority }}</td>
+                            <td>{{ task.task_due_date }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                
+            </div>
+
+            <div class="col-12 col-sm-6 col-md-4 mt-2">
+                <h3 class="fw-bold fs-4 my-3 text-center">
+                    Tasks Overview
+                </h3>
+                <div class="card-body d-flex justify-content-center">
+                    <div class="chart-container" style="position: relative; width: 100%; max-width: 380px; aspect-ratio: 1 / 1;">
+                        <canvas id="taskStatusPieChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+ </div> 
+
+
+
+<!-- Initialize Chart.js -->
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const ctx = document.getElementById('taskStatusPieChart');
+        if (ctx) {
+            new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: {{ pie_chart_labels|safe }},
+                    datasets: [{
+                        data: {{ pie_chart_values|safe }},
+                        backgroundColor: ['#1e1d78','#e31e10','#32b361','#FFA500'],
+                        borderColor: '#ffffff',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: '#000',
+                                font: {
+                                    size: 13
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    });
+</script>
+
+
+{%endblock%} 

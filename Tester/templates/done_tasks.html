@@ -1,0 +1,89 @@
+{% extends 'sidebar4.html' %}
+{% block content %}
+{% load static %}
+<script src="{% static 'js/task.js' %}"></script>
+
+
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-10">
+
+            <div class="title mt-4 text-center">
+                <h4>Your Assigned Tasks</h4>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-striped mb-5 mt-4 view-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">TITLE</th>
+                            <th scope="col">DESCRIPTION</th>
+                            <th scope="col">PROJECT</th>
+                            <th scope="col">PRIORITY</th>
+                            <th scope="col">START DATE</th>
+                            <th scope="col">DEADLINE</th>
+                            <th scope="col">UPDATE STATUS</th>
+                            <th scope="col">ADD BUGS</th>
+                            </tr>
+                    </thead>
+                    <tbody>
+                        {% for task in tasks %}
+                        <tr>
+                            <td>{{ task.task_title }}</td>
+                            <td>{{ task.task_description }}</td>
+                            <td>{{ task.task_project }}</td>
+                            <td>{{ task.task_priority }}</td>
+                            <td>{{ task.task_start_date }}</td>
+                            <td>{{ task.task_due_date }}</td>
+                            <td>
+                                <select class="form-control status-dropdown" data-task-id="{{ task.id }}">
+                                    <option value="Pending" {% if task.task_status == "Pending" %}selected{% endif %}>Pending</option>
+                                    <option value="In Progress" {% if task.task_status == "In Progress" %}selected{% endif %}>In Progress</option>
+                                    <option value="Completed" {% if task.task_status == "Completed" %}selected{% endif %}>Completed</option>
+                                </select>
+                            </td>
+                            <td>
+                              <a href="{% url 'add_bugs' task.id %}">Add Bugs</a>
+                            </td>                                                    
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.status-dropdown').forEach(function(dropdown) {
+            dropdown.addEventListener('change', function() {
+                const taskId = this.dataset.taskId;
+                const newStatus = this.value;
+    
+                fetch("{% url 'update_task_status' %}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": "{{ csrf_token }}",
+                    },
+                    body: JSON.stringify({
+                        task_id: taskId,
+                        status: newStatus
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.success) {
+                        alert("Failed to update status.");
+                    }
+                })
+                .catch(error => console.error("Error:", error));
+            });
+        });
+    });
+    </script>
+    
+{% endblock %}

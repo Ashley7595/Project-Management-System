@@ -1,0 +1,212 @@
+<script>
+    const roleSelect = document.getElementById('id_task_roles');
+    const projectSelect = document.getElementById('id_task_project');
+    const assignedToSelect = document.getElementById('id_task_assigned_to');
+    const titleTextInput = document.getElementById('task_title_text');
+    const titleDropdown = document.getElementById('task_title_dropdown');
+
+    // Disable "Assigned To" initially
+    if (assignedToSelect) {
+        assignedToSelect.disabled = true;
+        assignedToSelect.innerHTML = '<option value="">-- Select Employee --</option>';
+    }
+
+    // ========== Update "Assigned To" Dropdown ==========
+    function updateAssignedTo(roleId) {
+        if (!assignedToSelect) return;
+
+        assignedToSelect.disabled = true;
+        assignedToSelect.innerHTML = '<option value="">-- Select Employee --</option>';
+
+        if (roleId) {
+            fetch(`/get-employees/${roleId}/`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.employees.length > 0) {
+                        data.employees.forEach(emp => {
+                            const option = document.createElement('option');
+                            option.value = emp.id;
+                            option.textContent = emp.name;
+                            assignedToSelect.appendChild(option);
+                        });
+                        assignedToSelect.disabled = false;
+                    }
+                });
+        }
+    }
+
+    // ========== Update Task Title Field ==========
+    function updateTaskTitleField(roleName) {
+        const projectId = projectSelect.value;
+
+        if (roleName === 'Tester') {
+            // Show dropdown, hide text input
+            titleTextInput.classList.add('d-none');
+            titleTextInput.name = '';
+            titleDropdown.classList.remove('d-none');
+            titleDropdown.name = 'task_title';
+
+            // Fetch completed tasks
+            if (projectId) {
+                fetch(`/get-completed-tasks/${projectId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        titleDropdown.innerHTML = '';
+                        if (data.tasks.length === 0) {
+                            titleDropdown.innerHTML = '<option value="">No completed tasks found</option>';
+                        } else {
+                            data.tasks.forEach(task => {
+                                const option = document.createElement('option');
+                                option.value = task.title;
+                                option.textContent = task.title;
+                                titleDropdown.appendChild(option);
+                            });
+                        }
+                    });
+            }
+        } else {
+            // Show text input, hide dropdown
+            titleTextInput.classList.remove('d-none');
+            titleTextInput.name = 'task_title';
+            titleDropdown.classList.add('d-none');
+            titleDropdown.name = '';
+        }
+    }
+
+    // ========== Event Listeners ==========
+    roleSelect.addEventListener('change', function () {
+        const selectedRoleId = this.value;
+        const selectedRoleName = this.options[this.selectedIndex].text;
+
+        updateAssignedTo(selectedRoleId);
+        updateTaskTitleField(selectedRoleName);
+    });
+
+    projectSelect.addEventListener('change', function () {
+        const selectedRoleName = roleSelect.options[roleSelect.selectedIndex].text;
+        updateTaskTitleField(selectedRoleName);
+    });
+</script>
+
+
+
+
+
+<form method="post" autocomplete="off" id="employeeForm">
+    {% csrf_token %}
+    <div class="row">
+        {% for field in form %}
+            {% if field.name == 'task_title' %}
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="task_title_text">Task Name</label> 
+                        <input type="text" name="task_title" id="task_title_text" class="form-control" placeholder="Enter Task Title">
+                        <select name="task_title" id="task_title_dropdown" class="form-control d-none">
+                            <option value="">Select Completed Task</option>
+                        </select>
+                    </div>
+                </div>
+            {% else %}
+                {% if forloop.first or forloop.counter0|divisibleby:2 %}
+                    <div class="row">  
+                {% endif %}
+                <div class="col-md-6">
+                    <div class="form-group">
+                        {{ field|as_crispy_field }}
+                        <small id="{{ field.auto_id }}_error" class="text-danger"></small>
+                    </div>
+                </div>
+                {% if forloop.counter|divisibleby:2 or forloop.last %}
+                    </div>
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+    </div>
+
+    <div class="col-lg-12 text-center mt-5 mb-5">
+        <button type="submit" class="btn-common">ADD</button>
+        <button type="reset" class="btn-common">RESET</button>
+    </div>
+</form>
+
+
+
+
+from django import forms
+from app1.models import Project
+from .models import Task, EmployeeRoles, EmployeeUser
+from datetime import datetime
+from django.core.exceptions import ValidationError
+
+
+class DateInput(forms.DateInput):
+    input_type = "date"
+
+
+class TaskForm(forms.ModelForm):
+    class Meta:
+        model = Task
+        fields = [
+            'task_roles',
+            'task_project',
+            'task_title',
+            'task_description',
+            'task_assigned_to',
+            'task_priority',
+            'task_start_date',
+            'task_due_date'
+        ]
+        widgets = {
+            "task_start_date": DateInput(attrs={'class': 'form-control'}),
+            "task_due_date": DateInput(attrs={'class': 'form-control'}),
+            "task_description": forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
+            "task_title": forms.TextInput(attrs={'class': 'form-control'}),
+            "task_priority": forms.Select(attrs={'class': 'form-control'}),
+        }
+        labels = {
+            "task_roles": "Roles",
+            "task_project": "Project Name",
+            "task_title": "Task Name",
+            "task_description": "Description",
+            "task_assigned_to": "Assigned To",
+            "task_priority": "Priority",
+            "task_start_date": "Start Date",
+            "task_due_date": "Deadline"
+        }
+
+    # Set task_roles as a regular dropdown (not multiple)
+    task_roles = forms.ModelChoiceField(
+        queryset=EmployeeRoles.objects.exclude(all_roles='Project Manager'),
+        widget=forms.Select(attrs={'class': 'form-control'}),
+        required=True,
+        label="Roles"
+    )
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+
+        # Filter roles to exclude Project Manager
+        self.fields['task_roles'].queryset = EmployeeRoles.objects.exclude(all_roles='Project Manager')
+
+        # Filter projects based on the logged-in Project Manager
+        self.fields['task_project'].queryset = Project.objects.filter(is_active=True)
+        if user:
+            self.fields['task_project'].queryset = self.fields['task_project'].queryset.filter(project_manager=user)
+
+        # Initially disable and empty "Assigned To" field
+        self.fields['task_assigned_to'].queryset = EmployeeUser.objects.none()
+        self.fields['task_assigned_to'].widget.attrs['disabled'] = True
+        self.fields['task_assigned_to'].widget.attrs['class'] = 'form-control'
+
+        # Enable assigned_to field if role is already selected (e.g., during POST)
+        if 'task_roles' in self.data:
+            try:
+                role_id = int(self.data.get('task_roles'))
+                role = EmployeeRoles.objects.get(id=role_id)
+                self.fields['task_assigned_to'].queryset = EmployeeUser.objects.filter(employee_roles=role)
+                self.fields['task_assigned_to'].widget.attrs.pop('disabled', None)
+            except (ValueError, EmployeeRoles.DoesNotExist):
+                pass
+
+   

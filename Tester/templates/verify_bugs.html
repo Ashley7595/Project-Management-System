@@ -1,0 +1,39 @@
+{% extends 'sidebar4.html' %}
+{% block content %}
+<div class="container mt-5">
+    <h4 class="text-center mb-4">Bugs to Verify</h4>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Bug Title</th>
+                <th>Description</th>
+                <th>Project</th>
+                <th>Task</th>
+                <th>Priority</th>
+                <th>Severity</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+           {% for bug in bugs %}
+            <tr>
+                <td>{{ bug.bug_title }}</td>
+                <td>{{ bug.bug_description }}</td>
+                <td>{{ bug.related_task.task_project }}</td>
+                <td>{{ bug.related_task.task_title }}</td>
+                <td>{{ bug.bug_priority }}</td>
+                <td>{{ bug.bug_severity }}</td>
+                <td>
+                    <a href="{% url 'approve_bug_fix' bug.bug_id %}" class="btn btn-success btn-sm">Approved</a>
+                    <a href="{% url 'reject_bug_fix' bug.bug_id %}" class="btn btn-danger btn-sm">Send Back</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" class="text-center">No fixed bugs to verify.</td>
+            </tr>
+            {% endfor %} 
+        </tbody>
+    </table>
+</div>
+{% endblock %}

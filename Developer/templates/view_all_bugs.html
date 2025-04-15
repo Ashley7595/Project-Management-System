@@ -1,0 +1,44 @@
+{% extends 'sidebar3.html' %}
+{% block content %}
+<div class="container mt-5">
+    <h3 class="text-center mb-4">Reported Bugs</h3>
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Project</th>
+                    <th>Task</th>
+                    <th>Bug Title</th>
+                    <th>Description</th>
+                    <th>Priority</th>
+                    <th>Severity</th>
+                    <th>Reported On</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for bug in bugs %}
+                <tr>
+                    <td>{{ bug.related_task.task_project }}</td>
+                    <td>{{ bug.related_task.task_title }}</td>
+                    <td>{{ bug.bug_title }}</td>
+                    <td>{{ bug.bug_description }}</td>
+                    <td>{{ bug.bug_priority }}</td>
+                    <td>{{ bug.bug_severity }}</td>
+                    <td>{{ bug.bug_date }}</td>
+                    <td>
+                        {% if not bug.is_fixed %}
+                          <a href="{% url 'mark_bug_fixed' bug.bug_id %}" class="btn btn-success btn-sm">Mark as Fixed</a>
+                        {% endif %}
+                      </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center">No bugs reported yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

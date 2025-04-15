@@ -1,0 +1,51 @@
+{% extends 'sidebar.html' %}
+{% block content %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-2"></div>
+        <div class="col-lg-8 m-3 p-2 common_form">
+            <div class="row">
+
+                 <div class="title mt-4 mb-3">
+                    <h4>Add Projects</h4>
+                </div>
+
+                <form method="post" autocomplete="off" id="employeeForm">
+                    {% csrf_token %}
+                
+                    <div class="row">
+                        {% for field in form %}
+                            {% if forloop.first or forloop.counter0|divisibleby:2 %}
+                                <div class="row">  
+                            {% endif %}
+                
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{ field|as_crispy_field }}
+                                    <small id="{{ field.auto_id }}_error" class="text-danger"></small>
+                                </div>
+                            </div>
+                
+                            {% if forloop.counter|divisibleby:2 or forloop.last %}
+                                </div> 
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                
+                    <div class="col-lg-12 text-center mt-5 mb-5">
+                        <button type="submit" class="btn-common">ADD</button>
+                        <button type="reset" class="btn-common">RESET</button>
+                    </div>
+                </form>
+                
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

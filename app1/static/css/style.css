@@ -1,0 +1,451 @@
+/*Login Navbar*/
+
+.login-navbar {
+    background: rgb(211,211,211);
+    height: 105px;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+/*Login*/
+
+.main {
+    background: #f2f4f7;
+    height: 525px;
+}
+
+img.logo {
+    width: 150px;
+}
+
+h3.login_title {
+    font-family: serif;
+    letter-spacing: 1px;
+    font-style: italic;
+    font-size: 30px;
+}
+
+.card_extra {
+    box-shadow: 5px 5px 5px 5px #d1d7db;
+    border: none;
+}
+
+.btn_login {
+    background: #262f80;
+    border: none;
+    color: #fff;
+    letter-spacing: 1px;
+    border-radius: 10px;
+    padding: 5px 15px;
+}
+
+a.face_anchor {
+    text-decoration: none;
+    transition: text-decoration 0.3s ease;
+    color:rgb(69, 124, 205)
+}
+
+a.face_anchor:hover{
+    text-decoration: underline;
+    color: #262f80;
+} 
+
+input#exampleInputEmail1\ extra_input {
+    color: #dddfe2;
+    border:1px solid #ccd0d5;
+    font-size: 17px;
+    line-height: 2;
+}
+input#exampleInputPassword1\ extra_input {
+    color: #dddfe2;
+    border:1px solid #ccd0d5;
+    font-size: 17px;
+    line-height: 2;
+}
+
+.login-overall {
+    height: 480px;
+}
+
+/*Footer*/
+
+.login-footer {
+    background: rgb(19 43 68);
+}
+.copy-para {
+    color: #fff;
+    letter-spacing: 1px;
+}
+
+
+/*Sidebar*/
+
+a {
+    text-decoration: none;
+}
+
+li {
+    list-style-type: none;
+}
+
+.wrapper {
+    display: flex;
+    min-height: 100vh;
+}
+
+
+.main {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    width: 100%;
+
+    transition: all 0.25s ease-in-out;
+    background: #fff;
+    flex: 1;
+}
+
+
+#sidebar {
+    width: 90px;
+    min-width: 90px;
+    transition: all 0.25s ease-in-out;
+    background: #09113f;
+    display: flex;
+    flex-direction: column;
+}
+
+#sidebar.expand {
+    width: 260px;
+    min-width: 260px;
+}
+
+#sidebar:not(.expand) .sidebar-logo,
+#sidebar:not(.expand) a.sidebar-link span {
+    display: none;
+}
+
+.toggle-btn {
+    width: 30px;
+    height: 30px;
+    color: #fff;
+    border-radius: 0.425rem;
+    font-size: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #323c55;
+    border: none;
+}
+
+.toggle-btn img {
+    transition: transform 0.3s ease;
+}
+
+.toggle-btn.rotate img {
+    transform: rotate(180deg);
+}
+
+.sidebar-logo a {
+    color: #fff;
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    font-family: serif;
+}
+
+.sidebar-nav {
+    padding: 0.7rem 0;
+    flex: 11 auto;
+    z-index: 10;
+}
+
+a.sidebar-link {
+    padding: .625rem 1.625rem;
+    color: #fff;
+    display: block;
+    white-space: nowrap;
+    font-weight: 700;
+    border-left: 3px solid transparent;
+}
+
+.sidebar-link i,
+.dropdown-item i,
+.menu-icon {
+    font-size: 1.1rem;
+    margin-right: .75rem;
+}
+
+#icon {
+    filter: invert(1) grayscale(100%) brightness(100%);
+}
+
+a.sidebar-link:hover {
+    background-color: rgba(255,255,255,.075);
+    border-left: 3px solid #3b7ddd;
+}
+
+.sidebar-item {
+    position: relative;
+}
+
+.navbar {
+    background-color: #fff;
+    box-shadow: 0 0 2rem 0 rgba(33,37,41,.1);
+}
+
+.navbar-expand .navbar-collapse {
+    min-width: 200px;
+}
+
+.avatar {
+    height: 40px;
+    width: 45px;
+}
+
+.sidebar-footer {
+    margin-top: auto;
+}
+
+.sidebar-footer .sidebar-link {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0.625rem 1.625rem;
+    color: #fff;
+}
+
+.sidebar-footer .menu-icon {
+    margin-right: 0.75rem;
+}
+
+
+.content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem;
+    max-height: calc(100vh - 72px); /* Adjust based on your navbar height */
+}
+
+/* Specific styles for mobile devices */
+
+@media (max-width: 768px) {
+    .content {
+        height: calc(100vh - 50px);  /* Adjust height to allow space for header/footer */
+        overflow-y: auto;            /* Enable vertical scrolling */
+        -webkit-overflow-scrolling: touch;  /* Smooth scrolling on iOS */
+    }
+}
+
+
+/*Sidebar*/
+
+
+
+/*Admin Dashboard*/
+
+.card-boxes {
+    background-color: #fff;
+    transition: .4s;
+    cursor: pointer;
+    color: #000;
+    margin-bottom: 1rem;
+    border-color: rgba(231,234,243,0.7);
+}
+
+.card-boxes h5 {
+    text-transform: uppercase;
+    font-size: 1rem;
+    margin-bottom: .25rem;
+}
+
+.card-boxes:hover {
+    background-color: #293b5f;
+    color: #fff;
+    transform: translateY(-10.5px);
+}
+
+.table > thead tr {
+    color: #fff;
+    text-align: left;
+}
+
+tr.highlight th {
+    background-color: #293b5f;
+    color: #fff;
+    text-align: center;
+}
+
+/*Date Picker*/
+
+.flatpickr-input {
+    width: 100%;
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+/* Table */
+
+.w-fixed {
+    min-width: 100px;
+    text-align: center;
+}
+
+a.btn.toggle-btn {
+    width: 100px !important;
+    display: inline-block;
+    text-align: center;
+    white-space: nowrap;
+}
+
+
+/*Password Icon*/
+
+.password-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+/* Responsive eye icon inside input */
+.password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 1rem;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 1rem;  /* scales well */
+    color: #666;
+    z-index: 2;
+}
+
+.password-wrapper input {
+    padding-right: 2.5rem; /* ensures enough space for the icon inside the input */
+}
+
+@media (max-width: 480px) {
+    .password-toggle {
+        font-size: 0.9rem;
+        right: 0.8rem;
+    }
+
+    .password-wrapper input {
+        padding-right: 2rem;
+    }
+}
+
+/*Admin Dashboard*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*Common Styles*/
+
+.common_form {
+    box-shadow: 10px 10px 15px lightgrey;
+}
+
+.title h4 {
+    font-family: 'bootstrap-icons';
+    letter-spacing: 1px;
+    font-weight: bold;
+    color: #1567bd;
+    font-size: 28px;
+}
+
+.btn-common {
+    color: #fff;
+    background: #132b44;
+    border: none;
+    border-radius: 12px;
+    letter-spacing: 1px;
+    padding: 5px 20px;
+    font-family: serif;
+}
+
+
+/* View Employees*/
+
+.view-table {
+    text-align: center;
+    box-shadow: 5px 5px 5px 5px lightgrey;
+}
+.view-table th {
+    letter-spacing: 1px;
+    padding: 15px;
+}
+.btn-extra-edit {
+background-color: #132b44;
+}
+.btn-extra-edit:hover{
+    background-color: #fff;
+    color: #132b44;
+    border:none;
+    font-weight: bold;
+    }
+.btn-extra {
+    font-size: 13px;
+    letter-spacing: 1px;
+    padding: 8px 15px;
+}
+.password-reset-container {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Tester Dashboard */
+
+.common-testerbox {
+    text-align: center;
+    font-style: italic;
+}
+
+.testbox-1 {
+    background: #4d72f3;
+}
+
+.testbox-2 {
+    background: #81e23f;
+}
+
+.testbox-3 {
+    background: purple;
+}
+
+.testbox-4 {
+    background: #e2247c;
+}
+.scrollable-test-list {
+    max-height: 180px;  
+    overflow-y: auto;
+}
+.scrollable-content-testfeed {
+    max-height: 190px; 
+    overflow-y: auto; 
+}
+
+/*Task List*/
+
+a.btn_list {
+    text-decoration: none;
+    color: #fdf7f7;
+    font-size: 15px;
+}

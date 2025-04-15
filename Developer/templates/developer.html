@@ -1,0 +1,137 @@
+{% extends 'sidebar3.html'%}
+{%block content%}
+{% load static %}
+
+
+<div class="container-fluid mb-5">
+    <div class="mb-3">
+        <h3 class="fw-bold fs-4 mb-3">
+            Welcome, {{ request.user.first_name }} {{ request.user.last_name }}!
+        </h3>
+        <div class="row">
+
+            <div class="col-12 col-md-4">
+                <div class="card card-boxes shadow">
+                    <div class="card-body py-4">
+                        <h5 class="mb-2 fw-bold">
+                            Active Tasks
+                        </h5>
+                        <p class="fw-bold mb-2">
+                            20
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-4">
+                <div class="card card-boxes shadow">
+                    <div class="card-body py-4">
+                        <h5 class="mb-2 fw-bold">
+                            Completed Tasks
+                        </h5>
+                        <p class="fw-bold mb-2">
+                            15
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-4">
+                <div class="card card-boxes shadow">
+                    <div class="card-body py-4">
+                        <h5 class="mb-2 fw-bold">
+                            High Priority Tasks
+                        </h5>
+                        <p class="fw-bold mb-2">
+                            20
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="col-12 col-md-8 col-sm-8 mt-2">
+                <h3 class="fw-bold fs-4 my-3">Latest Tasks</h3>
+                <table class="table table-striped text-center">
+                    <thead>
+                        <tr class="highlight">
+                            <th scope="col">Task Title</th>
+                            <th scope="col">Assigned To</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Priority</th>
+                            <th scope="col">Due Date</th>
+                        </tr>
+                    </thead>
+                
+                    <tbody>
+                        {% for task in tasks %}
+            <tr>
+                <td>{{ task.task_title }}</td>
+                <td class="text-truncate" style="max-width: 150px;">{{ task.task_assigned_to }}</td>
+                <td>{{ task.task_status }}</td>
+                <td>{{ task.task_priority }}</td>
+                <td>{{ task.task_due_date }}</td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="5">No tasks available.</td>
+            </tr>
+        {% endfor %}
+                    
+                    </tbody>
+                </table>
+                
+            </div>
+
+            <div class="col-4 col-lg-4 col-md-4 col-sm-4 mt-2">
+                <h3 class="fw-bold fs-4 my-3">
+                    Reports Overview
+                </h3>
+                <div class="card-body">
+                    <canvas id="taskStatusPieChart"></canvas>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+ </div> 
+
+
+
+<!-- Initialize Chart.js -->
+
+<script>
+    const ctx = document.getElementById('taskStatusPieChart').getContext('2d');
+    const taskStatusPieChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: ['Testers','Developers', 'On Going', 'Completed'],
+            datasets: [{
+                label: 'Task Status Distribution',
+                data: [3,2, 5, 7],
+                backgroundColor: ['#e31e10','#1e1d78','#FFA500','#32b361']
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function (context) {
+                            return context.label + ': ' + context.raw + '%';
+                        }
+                    }
+                }
+            }
+        }
+    });
+</script>
+
+{%endblock%} 
