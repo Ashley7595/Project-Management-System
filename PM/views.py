@@ -126,16 +126,11 @@ def tasks(request):
     
 
 
-def get_completed_tasks(request, project_id):
-    tasks = Task.objects.filter(task_project_id=project_id, task_status='Completed')
-    task_title = [{'id': task.id, 'title': task.task_title} for task in tasks]
-    return JsonResponse({'tasks': task_title})
-
-
-def get_employees(request, role_id):
+def get_employees(request):
+    role_id = request.GET.get('role_id')
     try:
-        role = EmployeeRoles.objects.get(id=role_id)
-        employees = EmployeeUser.objects.filter(employee_roles=role)
+        role = EmployeeRoles.objects.get(id=role_id)  # ✅ use role_id here
+        employees = EmployeeUser.objects.filter(employee_roles=role)  # ✅ filter based on the role
 
         employee_data = [
             {
@@ -144,11 +139,17 @@ def get_employees(request, role_id):
             }
             for employee in employees
         ]
-
         return JsonResponse({"employees": employee_data})
 
     except EmployeeRoles.DoesNotExist:
         return JsonResponse({"employees": []})
+    
+
+def get_completed_tasks(request, project_id):
+    completed_tasks = Task.objects.filter(task_project_id=project_id, task_status='Completed')
+    data = [{"id": t.id, "title": t.task_title} for t in completed_tasks]
+    return JsonResponse({"tasks": data})
+
 
 
 

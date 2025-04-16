@@ -16,8 +16,10 @@ urlpatterns = [
     path('edit_task/<int:id>/', views.edit_task, name='edit_task'), 
     path('delete_task/<int:pk>/delete/', TaskDeleteView.as_view(), name='delete_task'),
 
+    path('get-employees/', views.get_employees, name='get_employees'),
     path('get-completed-tasks/<int:project_id>/', views.get_completed_tasks, name='get_completed_tasks'),
-    path('get-employees/<int:role_id>/', views.get_employees, name='get_employees'),
+
+
     
     path('view_bugs/', views.view_all_bugs, name='view_bugs'),
 ]

@@ -6,7 +6,7 @@
 <div class="container">
     <div class="row">
         <div class="col-lg-2"></div>
-        <div class="col-lg-8 common_form">
+        <div class="col-lg-8 m-3 p-2 common_form">
             <div class="row">
                 <div class="title mt-4">
                     <h4>Assign Tasks</h4>
@@ -14,34 +14,70 @@
 
                 <form method="post" autocomplete="off" id="employeeForm">
                     {% csrf_token %}
-                
+                    
                     <div class="row">
                         {% for field in form %}
                             {% if forloop.first or forloop.counter0|divisibleby:2 %}
-                                <div class="row">  
+                                <div class="row"> 
                             {% endif %}
-                
+                            
                             <div class="col-md-6">
                                 <div class="form-group">
                                     {{ field|as_crispy_field }}
                                     <small id="{{ field.auto_id }}_error" class="text-danger"></small>
                                 </div>
                             </div>
-                
+                            
                             {% if forloop.counter|divisibleby:2 or forloop.last %}
                                 </div> 
                             {% endif %}
                         {% endfor %}
                     </div>
-                
+                    
                     <div class="col-lg-12 text-center mt-5 mb-5">
                         <button type="submit" class="btn-common">ADD</button>
                     </div>
-                </form>
-                
+                </form> 
+
             </div>
         </div>
     </div>
 </div>
 
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const roleDropdown = document.getElementById('id_task_roles');
+        const employeeDropdown = document.getElementById('id_task_assigned_to');
+
+        // Make sure it's empty on load
+        employeeDropdown.innerHTML = '<option value="">Select an Employee</option>';
+
+        roleDropdown.addEventListener('change', function () {
+            const roleId = this.value;
+
+            if (roleId) {
+                fetch(`/get-employees/?role_id=${roleId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        employeeDropdown.innerHTML = '<option value="">Select an Employee</option>';
+                        data.employees.forEach(employee => {
+                            const option = document.createElement('option');
+                            option.value = employee.id;
+                            option.textContent = employee.name;
+                            employeeDropdown.appendChild(option);
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error fetching employees:', error);
+                    });
+            } else {
+                employeeDropdown.innerHTML = '<option value="">Select an Employee</option>';
+            }
+        });
+    });
+</script>
+
+
 {% endblock %}
+ 
