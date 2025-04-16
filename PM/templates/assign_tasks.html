@@ -76,6 +76,47 @@
             }
         });
     });
+
+ // ========== Update Task Title Field ==========
+ function updateTaskTitleField(roleName) {
+    const projectId = projectSelect.value;
+
+    if (roleName === 'Tester') {
+        // Show dropdown, hide text input
+        titleTextInput.classList.add('d-none');
+        titleTextInput.name = '';
+        titleDropdown.classList.remove('d-none');
+        titleDropdown.name = 'task_title';
+
+        // Fetch completed tasks
+        if (projectId) {
+            fetch(`/get-completed-tasks/${projectId}`)
+                .then(response => response.json())
+                .then(data => {
+                    titleDropdown.innerHTML = '';
+                    if (data.tasks.length === 0) {
+                        titleDropdown.innerHTML = '<option value="">No completed tasks found</option>';
+                    } else {
+                        data.tasks.forEach(task => {
+                            const option = document.createElement('option');
+                            option.value = task.title;
+                            option.textContent = task.title;
+                            titleDropdown.appendChild(option);
+                        });
+                    }
+                });
+        }
+    } else {
+        // Show text input, hide dropdown
+        titleTextInput.classList.remove('d-none');
+        titleTextInput.name = 'task_title';
+        titleDropdown.classList.add('d-none');
+        titleDropdown.name = '';
+    }
+}
+
+
+
 </script>
 
 
